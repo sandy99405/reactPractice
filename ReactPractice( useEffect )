@@ -1,0 +1,38 @@
+import {useState, useEffect} from 'react'
+
+function ChatApp({roomId}){
+      const[serverUrl,setSrverUrl] = useState('http://localhost:3000')
+      const[message,setMessage] = useState('')
+
+      useEffect(()=>{
+           const Conn = createConnection(serverUrl,roomId)
+           conn.connect()
+          return () =>{
+              conn.disconnect()
+          }
+      },[serverUrl,roomId])
+}
+
+export default function App(){
+   const[roomId,setRoomId] = useState('General')
+   const[show,setShow] = useState(false)
+  
+  return(
+        <>
+          <label>
+             Choose your genre : 
+             <select value={roomId} onChange={e=>setRoomId(e.target.value)}>
+                  <option value="general">General</option>
+                  <option value="music">Music</option>
+                  <option value="dance">Dance</option>
+             </select>
+             <button onClick={()=>setShow(!show)}>
+             {show?'Close App':'Open App'}
+             </button>
+          </label>
+          {show && <hr/>}
+          {show && <ChatApp roomId={roomId}/>}
+        </>
+     )
+}
+
